@@ -1,0 +1,32 @@
+#Configuramos variables globales para conteo de peticiones
+when RULE_INIT {
+  set static::countReq 1
+  set static::countNoReq 1
+}
+
+when CLIENT_ACCEPTED {
+  #creamos una etiqueta de tiempo para validar la activación de log
+  set curtime [clock seconds]
+  #limpiamos registro de las variables locales si son mayores a uno
+  if {[clock format $curtime -format {%M} ] ends_with 9 }{
+    if {$static::countReq>2}{
+      set static::countReq 1
+      set static::countNoReq 1
+  	}
+  }
+}
+
+when HTTP_REQUEST {
+  #la revicion de headers se realiza cada minuto con terminación 0
+  if {[clock format $curtime -format {%M} ] ends_with 0  }{
+    #se realiza la búsqueda del header "X-Nokia-msisdn" y se incrementa 1 la variable global
+    if { [class match [IP::client_addr] equals dg_mx] and [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+      log local0.warning "[IP::client_addr] Accept header OK MX IP static::msiCount=$static::countReq"
+      incr static::countReq 1	
+	  }
+    if {[class match [IP::client_addr] equals dg_mx] and [HTTP::header "X-Nokia-msisdn"] eq "" }{
+      log local0.warning "[IP::client_addr] NO header MX IP static::msiCount=$static::countNoReq"
+      incr static::countNoReq 1
+    }
+  } 
+}
