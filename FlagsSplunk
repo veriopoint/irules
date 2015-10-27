@@ -1,0 +1,40 @@
+when CLIENT_ACCEPTED {
+    set client_address [IP::client_addr]
+    set vip [IP::local_addr]
+}
+when HTTP_REQUEST {
+    set http_host [HTTP::host]:[TCP::local_port]
+    set http_uri [HTTP::uri]
+    set http_header [HTTP::header X-Nokia-msisdn]
+    set http_url $http_host$http_uri
+    set http_method [HTTP::method]
+    set http_version [HTTP::version]
+    set http_user_agent [HTTP::header "User-Agent"]
+    set http_content_type [HTTP::header "Content-Type"]
+    set http_referrer [HTTP::header "Referer"]
+    set tcp_start_time [clock clicks -milliseconds]
+    set req_start_time [clock format [clock seconds] -format "%Y/%m/%d %H:%M:%S"]
+    set cookie [HTTP::cookie names]
+    set user [HTTP::username]
+    set virtual_server [LB::server]
+
+    if { [HTTP::header Content-Length] > 0 } then {
+        set req_length [HTTP::header "Content-Length"]
+    } else {
+        set req_length 0
+    }
+}
+when HTTP_RESPONSE {
+    set res_start_time [clock format [clock seconds] -format "%Y/%m/%d %H:%M:%S"]
+    set node [IP::server_addr]
+    set node_port [TCP::server_port]
+    set http_status [HTTP::status]
+    set req_elapsed_time [expr {[clock clicks -milliseconds] - $tcp_start_time}]
+    if { [HTTP::header Content-Length] > 0 } then {
+        set res_length [HTTP::header "Content-Length"]
+    } else {
+        set res_length 0
+    }
+    set hsl [HSL::open -proto TCP -pool pool_splunk]
+    HSL::send $hsl "<190>,f5_irule=Splunk-iRule-HTTP,src_ip=$client_address,vip=$vip,http_method=$http_method,http_host=$http_host,http_uri=$http_uri,http_header=$http_header,http_url=$http_url,http_method=$http_method,http_version=$http_version,http_user_agent=\"$http_user_agent\",http_content_type=$http_content_type,http_referrer=\"$http_referrer\",req_start_time=$req_start_time,cookie=\"$cookie\",user=$user,virtual_server=\"$virtual_server\",bytes_in=$req_length,res_start_time=$res_start_time,node=$node,node_port=$node_port,http_status=$http_status,req_elapsed_time=$req_elapsed_time,bytes_out=$res_length\r\n"
+}
