@@ -1,0 +1,221 @@
+when RULE_INIT {
+  		set static::MXReq 1
+ 		set static::MxNoReq 1
+ 		set static::GTReq 1
+ 		set static::GTNoReq 1
+ 		set static::NIReq 1
+		set static::NINoReq 1 
+
+  		set static::COLReq 1
+ 		set static::COLNoReq 1
+ 		set static::PANReq 1
+ 		set static::PANNoReq 1
+ 		set static::ECUReq 1
+		set static::ECUNoReq 1
+
+  		set static::PERReq 1
+ 		set static::PERNoReq 1
+ 		set static::BRAReq 1
+ 		set static::BRANoReq 1
+ 		set static::CHIReq 1
+		set static::CHINoReq 1
+
+  		set static::ARGReq 1
+ 		set static::ARGNoReq 1
+ 		set static::PUEReq 1
+ 		set static::PUENoReq 1
+ 		set static::REPReq 1
+		set static::REPNoReq 1
+
+  		set static::COSReq 1
+ 		set static::COSNoReq 1
+
+   }
+
+when CLIENT_ACCEPTED {
+ set curtime [clock seconds]
+#log "[clock format $curtime -format {%H:%M:%S} ]"
+  if {[clock format $curtime -format {%M} ] ends_with 9 and $static::MXReq>1 }{
+  	log "reset VARS"
+  		set static::MXReq 1
+ 		set static::MxNoReq 1
+ 		set static::GTReq 1
+ 		set static::GTNoReq 1
+ 		set static::NIReq 1
+		set static::NINoReq 1 
+
+  		set static::COLReq 1
+ 		set static::COLNoReq 1
+ 		set static::PANReq 1
+ 		set static::PANNoReq 1
+ 		set static::ECUReq 1
+		set static::ECUNoReq 1
+
+  		set static::PERReq 1
+ 		set static::PERNoReq 1
+ 		set static::BRAReq 1
+ 		set static::BRANoReq 1
+ 		set static::CHIReq 1
+		set static::CHINoReq 1
+
+  		set static::ARGReq 1
+ 		set static::ARGNoReq 1
+ 		set static::PUEReq 1
+ 		set static::PUENoReq 1
+ 		set static::REPReq 1
+		set static::REPNoReq 1
+
+  		set static::COSReq 1
+ 		set static::COSNoReq 1
+  }
+}
+
+
+when HTTP_REQUEST {	
+#log "[clock format $curtime -format {%H:%M:%S} ]"
+	if {[clock format $curtime -format {%M} ] ends_with 0 }{
+#set hsl [HSL::open -proto UDP -pool pool_splunk]
+
+		if {[class match [IP::client_addr] equals dg_mx] } {
+
+			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+				log local0.warning "[IP::client_addr] OK Accept header MX IP static::msiCount=$static::MXReq [clock format $curtime -format {%H:%M:%S} ]"		
+#HSL::send $hsl "[IP::client_addr] OK Accept header MX IP static::msiCount=$static::MXReq [clock format $curtime -format {%H:%M:%S} ]"
+				incr static::MXReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+  				log local0.warning "[IP::client_addr] NO Accept header MX IP static::msiCount=$static::MxNoReq [clock format $curtime -format {%H:%M:%S} ]"			
+#HSL::send $hsl "[IP::client_addr] NO Accept header MX IP static::msiCount=$static::MxNoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::MxNoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_gt] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header GT/SV/HN IP static::msiCount=$static::GTReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::GTReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr] NO Accept header GT/SV/HN IP static::msiCount=$static::GTNoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::GTNoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_ni] } {
+
+ 			 if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header OK NI IP static::msiCount=$static::NIReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::NIReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr] NO Accept header NI IP static::msiCount=$static::NINoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::NINoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_col] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header OK Colombia IP static::msiCount=$static::COLReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::COLReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+ 				log local0.warning "[IP::client_addr] NO Accept header Colombia IP static::msiCount=$static::COLNoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::COLNoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_pan] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header OK Panama IP static::msiCount=$static::PANReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::PANReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr] NO Accept header Panama IP static::msiCount=$static::PANNoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::PANNoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_ecu] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+  			 	log local0.warning "[IP::client_addr] OK Accept header Ecuador IP static::msiCount=$static::ECUReq [clock format $curtime -format {%H:%M:%S} ]"
+  			 	incr static::ECUReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr] NO Accept header Ecuador IP static::msiCount=$static::ECUNoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::ECUNoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_per] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header Peru IP static::msiCount=$static::PERReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::PERReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr] NO Accept header Peru IP static::msiCount=$static::PERNoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::PERNoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_bra] } {
+
+ 		 	if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header Brasil IP static::msiCount=$static::BRAReq [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] OK Accept header Brasil IP static::msiCount=$static::BRAReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::BRAReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr] NO Accept header Brasil IP static::msiCount=$static::BRANoReq [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO Accept header Brasil IP static::msiCount=$static::BRANoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::BRANoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_chi] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header Chile IP static::msiCount=$static::CHIReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::CHIReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr] NO Accept header Chile IP static::msiCount=$static::CHINoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::CHINoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_arg] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header ARG/URU/PAR  IP static::msiCount=$static::ARGReq [clock format $curtime -format {%H:%M:%S} ]"				
+#HSL::send $hsl "[IP::client_addr] OK Accept header ARG/URU/PAR IP static::msiCount=$static::ARGReq [clock format $curtime -format {%H:%M:%S} ]"
+				incr static::ARGReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr] NO Accept header ARG/URU/PAR IP static::msiCount=$static::ARGNoReq [clock format $curtime -format {%H:%M:%S} ]"				
+#HSL::send $hsl "[IP::client_addr] NO Accept header ARG/URU/PAR IP static::msiCount=$static::ARGNoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::ARGNoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_pue] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header Puerto Rico IP static::msiCount=$static::PUEReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::PUEReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr] NO Accept header Puerto Rico IP static::msiCount=$static::PUENoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::PUENoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_rep] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header Republica IP static::msiCount=$static::REPReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::REPReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr] NO Accept header Republica IP static::msiCount=$static::REPNoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::REPNoReq 1
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_cr] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+   				log local0.warning "[IP::client_addr] OK Accept header Costa Rica IP static::msiCount=$static::COSReq [clock format $curtime -format {%H:%M:%S} ]"			
+#HSL::send $hsl "[IP::client_addr] OK Accept header CR IP static::msiCount=$static::COSReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::COSReq 1	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+   				log local0.warning "[IP::client_addr]  NO Accept header Costa Rica IP static::msiCount=$static::COSNoReq [clock format $curtime -format {%H:%M:%S} ]"				
+#HSL::send $hsl "[IP::client_addr] NO Accept header CR IP static::msiCount=$static::COSNoReq [clock format $curtime -format {%H:%M:%S} ]"
+   				incr static::COSNoReq 1
+  			}
+		} else {
+			log "No data collect"
+		}
+	}
+}
