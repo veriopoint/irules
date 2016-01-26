@@ -1,0 +1,141 @@
+
+when HTTP_REQUEST {	
+ set curtime [clock seconds]
+	if {[clock format $curtime -format {%M} ] ends_with 0 }{
+#set hsl [HSL::open -proto UDP -pool pool_splunk]
+
+		if {[class match [IP::client_addr] equals dg_mx] } {
+
+			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header MX [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] OK-Header MX [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header MX [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header MX [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_gt] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header GT/SV/HN [clock format $curtime -format {%H:%M:%S} ]"	
+#HSL::send $hsl "[IP::client_addr] OK-Header GT/SV/HN [clock format $curtime -format {%H:%M:%S} ]"	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header GT/SV/HN [clock format $curtime -format {%H:%M:%S} ]"	
+#HSL::send $hsl "[IP::client_addr] NO-Header GT/SV/HN [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_ni] } {
+
+ 			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header NI [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] OK-Header NI [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header NI [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header NI [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_col] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header COL [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] OK-Header COL [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header COL [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header COL [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_pan] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header PAN [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] OK-Header PAN [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header PAN [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header PAN [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_ecu] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header ECU [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] OK-Header ECU [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header ECU [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header ECU [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_per] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header PER [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] OK-Header PER [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header PER [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header PER [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_bra] } {
+
+ 		 	if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header BRA [clock format $curtime -format {%H:%M:%S} ]"	
+#HSL::send $hsl "[IP::client_addr] OK-Header BRA [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header BRA [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header BRA [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_chi] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header CHI [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] OK-Header CHI [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header CHI [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header CHI [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_arg] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header ARG/URU/PAR [clock format $curtime -format {%H:%M:%S} ]"   								
+#HSL::send $hsl "[IP::client_addr] OK-Header ARG/URU/PAR [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header ARG/URU/PAR [clock format $curtime -format {%H:%M:%S} ]" 			
+#HSL::send $hsl "[IP::client_addr] NO-Header ARG/URU/PAR [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_pue] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header PUR [clock format $curtime -format {%H:%M:%S} ]"	
+#HSL::send $hsl  "[IP::client_addr] OK-Header PUR [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header PUR [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header PUR [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_rep] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header REP [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] OK-Header REP [clock format $curtime -format {%H:%M:%S} ]"
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header REP [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header REP [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} elseif {[class match [IP::client_addr] equals dg_cr] } {
+
+  			if { [HTTP::header count "X-Nokia-msisdn"] eq "1" } {
+log local0. "[IP::client_addr] OK-Header COR [clock format $curtime -format {%H:%M:%S} ]"	
+#HSL::send $hsl "[IP::client_addr] OK-Header COR [clock format $curtime -format {%H:%M:%S} ]"	
+			}
+  			if {[HTTP::header "X-Nokia-msisdn"] eq "" }{
+log local0. "[IP::client_addr] NO-Header COR [clock format $curtime -format {%H:%M:%S} ]"
+#HSL::send $hsl "[IP::client_addr] NO-Header COR [clock format $curtime -format {%H:%M:%S} ]"
+  			}
+		} else {
+			log "No data collect"
+		}
+	}
+}
